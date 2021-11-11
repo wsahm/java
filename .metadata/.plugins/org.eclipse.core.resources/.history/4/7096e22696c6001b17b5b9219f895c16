@@ -1,0 +1,21 @@
+package lx6;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ChatServer {
+public static void main(String[] args) throws Exception {
+	ServerSocket ss=new ServerSocket(8080);
+	System.out.println("Server online....."+ss.getInetAddress().getLocalHost().getHostAddress()+","+"");
+	while(true)
+	{
+		Socket s=ss.accept();
+		String ip=s.getInetAddress().getHostAddress();
+		System.out.println("ip="+ip);
+		int port=s.getPort();
+		new Thread(new ChatServerThread(s,ss,ip,port)).start();
+		
+	}
+}
+}

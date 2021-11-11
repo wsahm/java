@@ -1,0 +1,116 @@
+package lx6;
+
+import java.awt.Toolkit;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.Date;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
+public class ChatClient {
+
+	// 建立客户端Socket
+	static Socket s = null;
+	// 消息接收者uid
+	static StringBuilder uidReceiver = null;
+
+	public static void main(String[] args) {
+		ChatClientFrame chatClientFrame = new ChatClientFrame();
+		//设置点×不关闭
+		chatClientFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		// 获取本机屏幕横向分辨率
+		int w = Toolkit.getDefaultToolkit().getScreenSize().width;
+		// 获取本机屏幕纵向分辨率
+		int h = Toolkit.getDefaultToolkit().getScreenSize().height;
+		// 将窗口置中
+		chatClientFrame.setLocation((w - chatClientFrame.WIDTH) / 2, (h - chatClientFrame.HEIGHT) / 2);
+		// 设置客户端窗口为可见
+		chatClientFrame.setVisible(true);
+		
+		try {
+			// 连接服务器
+			s = new Socket(InetAddress.getLocalHost(), 10000);
+			// 获取输入流
+			InputStream in = s.getInputStream();
+			// 获取输出流
+			OutputStream out = s.getOutputStream();
+
+			// 获取服务端欢迎信息
+			byte[] buf = new byte[1024];
+			int len = in.read(buf);
+			// 将欢迎信息打印在聊天消息框内
+			chatClientFrame.jtaChat.append(new String(buf, 0, len));
+			chatClientFrame.jtaChat.append("\n");
+
+			// 持续等待接收服务器信息直至退出
+			while (true) {
+				in = s.getInputStream();
+				len = in.read(buf);
+				System.out.println(len);
+				// 处理服务器传来的消息
+				String msg = new String(buf, 0, len);
+				System.out.println(" msg ---===--- "  + msg);
+				// 消息类型：更新在线名单或者聊天
+				String type = msg.substring(0, msg.indexOf("/"));
+				// 消息本体：更新后的名单或者聊天内容
+				String content = msg.substring(msg.indexOf("/") + 1);
+				// 根据消息类型分别处理
+				// 更新在线名单
+				if (type.equals("OnlineListUpdate")) {
+					// 提取在线列表的数据模型
+					DefaultTableModel tbm = (DefaultTableModel) chatClientFrame.jtbOnline.getModel();
+					// 清除在线名单列表
+					tbm.setRowCount(0);
+					String contentStr = content.substring(0, content.indexOf("|"));
+					// 更新在线名单
+					String[] onlinelist = contentStr.split(",");
+					// 逐一添加当前在线者
+					for (String member : onlinelist) {
+						String nikename = member.substring(0, member.indexOf("-"));
+						member = member.substring(member.indexOf("-") + 1);
+						String[] tmp = new String[3];
+						// 如果是自己则不在名单中显示
+						if (member.equals(InetAddress.getLocalHost().getHostAddress() + ":" + s.getLocalPort())) {
+							continue;
+						}
+						tmp[0] = nikename;
+						tmp[1] = member.substring(0, member.indexOf(":"));
+						tmp[2] = member.substring(member.indexOf(":") + 1);
+						// 添加当前在线者之一
+						tbm.addRow(tmp);
+					}
+					// 提取在线列表的渲染模型
+					DefaultTableCellRenderer tbr = new DefaultTableCellRenderer();
+					// 表格数据居中显示
+					tbr.setHorizontalAlignment(JLabel.CENTER);
+					chatClientFrame.jtbOnline.setDefaultRenderer(Object.class, tbr);
+					//设置网名
+					String nikename = content.substring(content.indexOf("|")+1);
+					if("".equals(chatClientFrame.wmTextField.getText()) ||chatClientFrame.wmTextField.getText()==null ) {
+						chatClientFrame.wmTextField.setText(nikename);
+					}
+				}
+				// 聊天
+				else if (type.equals("Chat")) {
+					System.out.println("content = --- " + content);
+					String sender = content.substring(0, content.indexOf("/"));
+					String word = content.substring(content.indexOf("/") + 1);
+					// 在聊天窗打印聊天信息
+					chatClientFrame.jtaChat.append(chatClientFrame.sdf.format(new Date()) + "\n来自 " + sender + ":\n" + word + "\n\n");
+					// 显示最新消息
+					chatClientFrame.jtaChat.setCaretPosition(chatClientFrame.jtaChat.getDocument().getLength());
+				}
+			}
+		} catch (Exception e) {
+			//处理连接失败
+			System.out.println("服务器异常，自动关闭客户端！！！");
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+}
+

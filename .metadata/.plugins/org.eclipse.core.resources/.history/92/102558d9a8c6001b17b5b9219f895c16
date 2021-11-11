@@ -1,0 +1,26 @@
+package lx6;
+
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class ChatServer {
+
+	public static void main(String[] args) throws Exception {
+		// 建立服务器ServerSocket
+		ServerSocket ss = new ServerSocket(10000);
+		// 提示Server建立成功
+		System.out.println("Server online... " + ss.getInetAddress().getLocalHost().getHostAddress() + ", " + 10000);
+		// 监听端口，建立连接并开启新的ServerThread线程来服务此连接
+		while (true) {
+			// 接收客户端Socket
+			Socket s = ss.accept();
+			// 提取客户端IP和端口
+			String ip = s.getInetAddress().getHostAddress();
+			System.out.println("ip = " + ip);
+			int port = s.getPort();
+			// 建立新的服务器线程, 向该线程提供服务器ServerSocket，客户端Socket，客户端IP和端口
+			new Thread(new ChatServerThread(s, ss, ip, port)).start();
+		}
+	}
+}
+

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;mysql-connector-java-5.1.47-bin.jar&apos; to &apos;lx&apos;&#x0D;&#x0A;－ 原始项目：“ch20”&#x0D;&#x0A;－ 目标元素：“lx”&#x0D;&#x0A;－ 原始元素：“mysql-connector-java-5.1.47-bin.jar”" description="复制文件" destination="=lx" element1="mysql-connector-java-5.1.47-bin.jar" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1607996414711" units="0" version="1.0"/>
+</session>

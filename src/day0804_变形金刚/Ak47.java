@@ -1,0 +1,1 @@
+package day0804_变形金刚;public class Ak47 implements Weapon {    @Override    public void kill() {        System.out.println("开枪！！");    }    @Override    public String getName() {        return "Ak47";    }    @Override    public int getType() {        return Weapon.TYPE_HOT;    }}

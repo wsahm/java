@@ -1,0 +1,93 @@
+package lx6;
+
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
+
+public class ChatClientFrame extends JFrame{
+	final int WIDTH = 700;
+	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	final int HEIGHT = 700;
+
+	JButton btnSend = new JButton("发送");
+	JButton btnClear = new JButton("清屏");
+	JButton btnExit = new JButton("退出");
+	JTextArea jtaSay = new JTextArea();//输入框
+	JTextArea jtaChat = new JTextArea();//消息框
+	JScrollPane jspChat = new JScrollPane(jtaChat);
+	String[] colTitles = { "网名", "IP", "端口" };
+	String[][] rowData = null;
+	JTable jtbOnline = new JTable(new DefaultTableModel(rowData, colTitles) {
+		@Override
+		public boolean isCellEditable(int row, int column) {
+			return false;
+		}
+	});
+	JScrollPane jspOnline = new JScrollPane(jtbOnline);
+	public ChatClientFrame() {
+			this.setTitle("聊天室");
+			this.setSize(WIDTH, HEIGHT);
+			this.setResizable(false);
+			this.setLayout(null);
+			btnSend.setBounds(20, 600, 100, 60);
+			btnClear.setBounds(140, 600, 100, 60);
+			btnExit.setBounds(260, 600, 100, 60);
+			btnSend.setFont(new Font("宋体", Font.BOLD, 18));
+			btnClear.setFont(new Font("宋体", Font.BOLD, 18));
+			btnExit.setFont(new Font("宋体", Font.BOLD, 18));
+			this.add(btnSend);
+			this.add(btnClear);
+			this.add(btnExit);
+			jtaSay.setBounds(20, 460, 360, 120);
+			jtaSay.setFont(new Font("楷体", Font.BOLD, 16));
+			jtaSay.setLineWrap(true);
+			this.add(jtaSay);
+			jtaChat.setLineWrap(true);
+			jtaChat.setEditable(false);
+			jtaChat.setFont(new Font("楷体", Font.BOLD, 16));
+			jspChat.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			jspChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+			jspChat.setBounds(20, 20, 360, 400);
+			this.add(jspChat);
+			jspOnline.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+			jspOnline.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+			jspOnline.setBounds(420, 20, 250, 400);
+			this.add(jspOnline);
+			btnExit.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			
+		});
+			btnClear.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+				jtaChat.setText("");
+					
+				}
+			});
+			btnSend.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					String text=jtaSay.getText();
+							jtaChat.append(sdf.format(new Date())+"\n发往"+":\n");
+							jtaChat.append(text+"\n\n");
+							jtaSay.setText("");
+					
+				}
+	});
+		}
+}

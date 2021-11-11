@@ -1,0 +1,45 @@
+package lx6;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+
+public class ChatServerThread implements Runnable {
+	
+	private Socket s;
+	private ServerSocket ss;
+	private String ip;
+	private int port;
+	String uid=null;
+	static ArrayList<String> uid_arr=new ArrayList<String>();
+	static HashMap<String,ChatServerThread> cs_arr=new HashMap<String,ChatServerThread>();
+ 	
+	public ChatServerThread(Socket s, ServerSocket ss, String ip, int port) {
+		this.s=s;
+		this.ss=ss;
+		this.ip=ip;
+		this.port=port;
+		uid=ip+":"+port;
+	}
+	SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	@Override
+	public void run() {
+		uid_arr.add(uid);
+		cs_arr.put(uid,this);
+		try {
+		InputStream in=s.getInputStream();
+		OutputStream out=s.getOutputStream();
+		String welcomeString=sdf.format(new Date())+"\n 成功链接 服务器...\nIP:"
+				+ ss.getInetAddress().getLocalHost().getHostAddress()+",端口：8080\n客户端IP:"+ip+",端口:"
+				+ port + "\n";
+		out.write(welcomeString.getBytes());
+	}catch (IOException e) {
+		e.printStackTrace();}
+	}
+}

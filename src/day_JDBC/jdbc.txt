@@ -1,0 +1,4 @@
+com.mysql.jdbc.Driver
+jdbc:mysql:///jt_db
+root
+wsahm1314

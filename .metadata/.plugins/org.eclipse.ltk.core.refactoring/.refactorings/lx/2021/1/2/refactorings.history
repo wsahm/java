@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring accessors="true" comment="Delete element from 项目“lx”&#x0D;&#x0A;－ 原始项目：“lx”&#x0D;&#x0A;－ 原始元素：“lx4.test.java”" description="删除元素" element1="/src&lt;lx4{test.java" elements="1" flags="589830" id="org.eclipse.jdt.ui.delete" resources="0" stamp="1609908598052" subPackages="false" version="1.0"/>&#x0A;<refactoring comment="将编译单元“lx4.Test.java”重命名为“wzqclass.java”&#x0D;&#x0A;－ 原始项目：“lx”&#x0D;&#x0A;－ 原始元素：“lx4.Test.java”&#x0D;&#x0A;－ 重命名的元素：“lx4.wzqclass.java”" description="重命名编译单元“Test.java”" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/src&lt;lx4{Test.java" name="wzqclass.java" references="false" stamp="1609911093911" version="1.0"/>
+</session>
